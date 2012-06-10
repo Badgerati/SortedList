@@ -1,14 +1,19 @@
 package sky.engine.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * An implementation of a Sorted List, which extends ArrayList. It is constructed using a Comparator
  * object that can compare two objects together, thus allowing the SortedList to order its elements
  * into ascending or descending order.
+ * 
+ * We can also create a SortedList without a Comparator object, if and only if the objects to be
+ * used implement the Comparable interface.
  * 
  * @author Matthew Kelly (Badgerati).
  * 
@@ -36,7 +41,7 @@ public class SortedList<T> extends ArrayList<T>
 	
 	
 	
-	
+
 	
 	
 	/**
@@ -51,6 +56,45 @@ public class SortedList<T> extends ArrayList<T>
 	}
 	
 	
+	/**
+	 * Create new instance of a SortedList. Objects will be sorted in ascending order,
+	 * according to the given Comparator. Objects from from given Collection will be added
+	 * and then sorted accordingly.
+	 * 
+	 * @param comp - Comparator to sort the objects by.
+	 */
+	public SortedList(Comparator<T> comp, Collection<? extends T> collection)
+	{
+		comparator = comp;
+		this.addAll(collection);
+	}
+	
+	
+	/**
+	 * Create new instance of a SortedList. Objects will be sorted in ascending order,
+	 * and MUST implement the Comparable interface.
+	 */
+	public SortedList()
+	{
+		comparator = null;
+	}
+	
+	
+	/**
+	 * Create new instance of a SortedList. Objects will be sorted in ascending order,
+	 * and MUST implement the Comparable interface.Objects from from given Collection will be added
+	 * and then sorted accordingly.
+	 */
+	public SortedList(Collection<? extends T> collection)
+	{
+		comparator = null;
+		this.addAll(collection);
+	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -61,6 +105,8 @@ public class SortedList<T> extends ArrayList<T>
 	
 	/**
 	 * This method is unsupported.
+	 * 
+	 * @throws UnsupportedOperationException.
 	 */
 	@Override
 	public void add(int index, T object)
@@ -116,6 +162,25 @@ public class SortedList<T> extends ArrayList<T>
 		sortAscending();
 		return passed;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Adds the given array of objects to the SortedList. The array is first added, and then
+	 * sorted into ascending order.
+	 */
+	public boolean addAll(T[] array)
+	{
+		boolean passed = super.addAll(Arrays.asList(array));
+		sortAscending();
+		return passed;
+	}
 
 
 
@@ -128,6 +193,8 @@ public class SortedList<T> extends ArrayList<T>
 
 	/**
 	 * This method is unsupported.
+	 * 
+	 * @throws UnsupportedOperationException.
 	 */
 	@Override
 	public boolean addAll(int index, Collection<? extends T> collection)
@@ -160,6 +227,28 @@ public class SortedList<T> extends ArrayList<T>
 		sortAscending();
 		return temp;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Clears all objects from the SortedList, and then adds all of the given objects. These
+	 * objects are assumed to be already in ascending or descending order.
+	 * 
+	 * @param list - List of objects to add after clearing.
+	 */
+	protected void clear(List<T> list)
+	{
+		this.clear();
+		super.addAll(list);
+	}
+	
 
 
 
@@ -173,9 +262,21 @@ public class SortedList<T> extends ArrayList<T>
 	/**
 	 * Sort the elements into ascending order.
 	 */
+	@SuppressWarnings("unchecked")
 	public void sortAscending()
 	{
-		Collections.sort(this, comparator);
+		if (comparator != null)
+		{
+			ArrayList<T> array = new ArrayList<T>(this);
+			Collections.sort(array, comparator);
+			this.clear(array);
+		}
+		else
+		{
+			T[] array = (T[])this.toArray();
+			Arrays.sort(array);
+			this.clear(Arrays.asList(array));
+		}
 	}
 	
 	
@@ -190,9 +291,21 @@ public class SortedList<T> extends ArrayList<T>
 	/**
 	 * Sort the elements into descending order.
 	 */
+	@SuppressWarnings("unchecked")
 	public void sortDescending()
 	{
-		Collections.sort(this, Collections.reverseOrder(comparator));
+		if (comparator != null)
+		{
+			ArrayList<T> array = new ArrayList<T>(this);
+			Collections.sort(this, Collections.reverseOrder(comparator));
+			this.clear(array);
+		}
+		else
+		{
+			T[] array = (T[])this.toArray();
+			Arrays.sort(array, Collections.reverseOrder());
+			this.clear(Arrays.asList(array));
+		}
 	}
 	
 	
