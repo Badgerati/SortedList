@@ -100,7 +100,7 @@ public class SortedList<T> extends ArrayList<T>
 	
 	
 	
-
+	
 	
 	
 	/**
@@ -113,16 +113,16 @@ public class SortedList<T> extends ArrayList<T>
 	{
 		throw new UnsupportedOperationException();
 	}
-
-
-
-
-
-
 	
-
-
-
+	
+	
+	
+	
+	
+		
+	
+	
+	
 	/**
 	 * Add the given object to the SortedList. The object will be added, and then the List sorted
 	 * into ascending order so the object is placed into the correct position.
@@ -249,6 +249,46 @@ public class SortedList<T> extends ArrayList<T>
 		super.addAll(list);
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the first object of the SortedList.
+	 * 
+	 * @return The first object.
+	 */
+	public T getFirst()
+	{
+		return this.get(0);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the last object of the SortedList.
+	 * 
+	 * @return The last object.
+	 */
+	public T getLast()
+	{
+		return this.get(this.size() - 1);
+	}
+	
 
 
 
@@ -260,11 +300,14 @@ public class SortedList<T> extends ArrayList<T>
 	
 
 	/**
-	 * Sort the elements into ascending order.
+	 * Sort the objects into ascending order.
 	 */
 	@SuppressWarnings("unchecked")
 	public void sortAscending()
 	{
+		if (size() == 1)
+			return;
+		
 		if (comparator != null)
 		{
 			ArrayList<T> array = new ArrayList<T>(this);
@@ -289,11 +332,14 @@ public class SortedList<T> extends ArrayList<T>
 	
 	
 	/**
-	 * Sort the elements into descending order.
+	 * Sort the objects into descending order.
 	 */
 	@SuppressWarnings("unchecked")
 	public void sortDescending()
 	{
+		if (size() == 1)
+			return;
+		
 		if (comparator != null)
 		{
 			ArrayList<T> array = new ArrayList<T>(this);
@@ -306,6 +352,27 @@ public class SortedList<T> extends ArrayList<T>
 			Arrays.sort(array, Collections.reverseOrder());
 			this.clear(Arrays.asList(array));
 		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Reverses the objects of the SortedList.
+	 */
+	public void reverse()
+	{
+		if (size() == 1)
+			return;
+		
+		ArrayList<T> array = new ArrayList<T>(this);
+		Collections.reverse(array);
+		this.clear(array);
 	}
 	
 	
